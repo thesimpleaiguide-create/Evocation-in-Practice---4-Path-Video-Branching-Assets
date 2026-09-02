@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evocation in Practice - Interactive Video</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ttnNavy: '#0C2340',
+                        ttnTrustBlue: '#005EB8',
+                        ttnActionOrange: '#FE5000',
+                        ttnSlate: '#333F48',
+                        ttnIceBlue: '#DBE2E9'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-transparent m-0 p-4 font-sans text-ttnSlate antialiased w-full">
+
+    <div class="max-w-4xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="space-y-2">
+            <h2 class="text-2xl font-bold text-ttnNavy tracking-tight">Evocation in Practice</h2>
+            <p class="text-sm text-slate-600">Your instinct is to put motivation in. Evocation means drawing it out. Select an approach below to see the immediate clinical impact.</p>
+        </div>
+
+        <!-- Video Player Area -->
+        <div class="relative w-full aspect-video bg-slate-900 rounded-xl overflow-hidden shadow-lg border border-slate-200">
+            <!-- Map your default idle loop or poster frame here -->
+            <video id="scenarioVideo" class="w-full h-full object-cover" poster="patient_idle_poster.jpeg" playsinline controls>
+                <source src="idle_loop.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Dynamic Feedback Panel (Hidden initially) -->
+        <div id="feedbackPanel" class="hidden p-4 rounded-lg border-l-4 transition-all duration-300">
+            <h3 id="feedbackTitle" class="font-bold text-lg mb-1"></h3>
+            <p id="feedbackText" class="text-sm leading-relaxed"></p>
+        </div>
+
+        <!-- The 4 Interactive Paths -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            
+            <button onclick="playScenario('lecture')" class="text-left p-4 rounded-lg border border-slate-200 hover:border-ttnActionOrange hover:bg-orange-50 transition-colors group">
+                <span class="block text-xs font-semibold text-slate-400 group-hover:text-ttnActionOrange mb-1">APPROACH A</span>
+                <span class="block text-sm font-medium text-ttnNavy">Tell him exactly why his high blood pressure is dangerous.</span>
+            </button>
+
+            <button onclick="playScenario('persuasion')" class="text-left p-4 rounded-lg border border-slate-200 hover:border-ttnActionOrange hover:bg-orange-50 transition-colors group">
+                <span class="block text-xs font-semibold text-slate-400 group-hover:text-ttnActionOrange mb-1">APPROACH B</span>
+                <span class="block text-sm font-medium text-ttnNavy">Convince him that changing his diet is the easiest fix.</span>
+            </button>
+
+            <button onclick="playScenario('negotiation')" class="text-left p-4 rounded-lg border border-slate-200 hover:border-ttnActionOrange hover:bg-orange-50 transition-colors group">
+                <span class="block text-xs font-semibold text-slate-400 group-hover:text-ttnActionOrange mb-1">APPROACH C</span>
+                <span class="block text-sm font-medium text-ttnNavy">Offer a compromise if he just agrees to take the medication.</span>
+            </button>
+
+            <button onclick="playScenario('evocation')" class="text-left p-4 rounded-lg border border-slate-200 hover:border-ttnTrustBlue hover:bg-blue-50 transition-colors group">
+                <span class="block text-xs font-semibold text-slate-400 group-hover:text-ttnTrustBlue mb-1">APPROACH D</span>
+                <span class="block text-sm font-medium text-ttnNavy">Ask him what a lower blood pressure would mean for his life.</span>
+            </button>
+
+        </div>
+    </div>
+
+    <script>
+        const videoElement = document.getElementById('scenarioVideo');
+        const feedbackPanel = document.getElementById('feedbackPanel');
+        const feedbackTitle = document.getElementById('feedbackTitle');
+        const feedbackText = document.getElementById('feedbackText');
+
+        // Map your Premiere Pro exported files here
+        const scenarios = {
+            lecture: {
+                src: 'path_a_lecture.mp4',
+                title: 'The Lecture Trap',
+                text: 'Correct information delivered without partnership triggers the righting reflex. The patient immediately closes off to defend their current behavior.',
+                type: 'trap'
+            },
+            persuasion: {
+                src: 'path_b_persuasion.mp4',
+                title: 'The Persuasion Trap',
+                text: 'You are attempting to install motivation instead of drawing it out. The patient feels pushed, resulting in resistance and sustain talk.',
+                type: 'trap'
+            },
+            negotiation: {
+                src: 'path_c_negotiation.mp4',
+                title: 'The Negotiation Trap',
+                text: 'Bargaining sidesteps the core issue. You may get short-term compliance, but the patient\'s internal, long-term reasons for change remain completely unaddressed.',
+                type: 'trap'
+            },
+            evocation: {
+                src: 'path_d_evocation.mp4',
+                title: 'Evocation in Action',
+                text: 'By asking the right question, the patient supplies their own reasons for change in their own words. This is the terrain where actual behavioral shifts occur.',
+                type: 'success'
+            }
+        };
+
+        function playScenario(choice) {
+            const data = scenarios[choice];
+            
+            // Update Video
+            videoElement.src = data.src;
+            videoElement.play();
+
+            // Update Feedback Styling
+            feedbackPanel.classList.remove('hidden', 'bg-orange-50', 'border-ttnActionOrange', 'text-orange-900', 'bg-blue-50', 'border-ttnTrustBlue', 'text-ttnNavy');
+            
+            if (data.type === 'trap') {
+                feedbackPanel.classList.add('bg-orange-50', 'border-ttnActionOrange', 'text-orange-900');
+                feedbackTitle.classList.replace('text-ttnTrustBlue', 'text-ttnActionOrange');
+            } else {
+                feedbackPanel.classList.add('bg-blue-50', 'border-ttnTrustBlue', 'text-ttnNavy');
+                feedbackTitle.classList.replace('text-ttnActionOrange', 'text-ttnTrustBlue');
+            }
+
+            // Inject Feedback Content
+            feedbackTitle.textContent = data.title;
+            feedbackText.textContent = data.text;
+        }
+    </script>
+</body>
+</html>
